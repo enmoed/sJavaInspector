@@ -2,7 +2,7 @@ package oop.ex6.vocabulary.exceptions;
 
 import oop.ex6.vocabulary.VariablesTypes;
 
-public class VarTypeException extends Exception {
+public class VarTypeException extends VocabularyException {
     public VarTypeException(VariablesTypes vt, String val){
         super(String.format("try to assign %s to %s variable type",vt,val));
     }
