@@ -14,18 +14,19 @@ public class SyntaxValidator {
     private static final String BOOL = "\\s*(false|true)\\s*";
     private static final String END_LINE = ";\\s*";
     private static final String VAR = "(" + INT + "|" + DOUBLE + "|" + LITERAL + "|" + CHAR + "|" + BOOL + "|" + VAR_NAME + ")";
-    private static final String VAR_LIST = VAR + "(," + VAR + ")*";
+    private static final String VAR_LIST = "\\s*(" + VAR + "(," + VAR + ")*)?";
     private static final String BOOL_OR_DOUBLE = "(" + BOOL + "|" + DOUBLE + ")";
     private static final String IF_WHILE = "\\s*(if|while)\\s*";
     private static final String TYPE = "(int|double|String|boolean|char)";
-    private static final String PARAM_LIST = "\\s*" + TYPE + VAR_NAME + "(,\\s*" + TYPE + VAR_NAME + ")*";
+    private static final String PARAM_LIST = "\\s*(" + TYPE + VAR_NAME + "(,\\s*" + TYPE + VAR_NAME + ")*)?";
     private static final String OP = "(\\|\\||&&)";
-    private static final String TERM = "(" + DOUBLE + "|" + BOOL + "|" + VAR_NAME + ")";
+    private static final String TERM = "(" + DOUBLE + "|" + VAR_NAME + ")";
     private static final String CONDITION = TERM + "(" + OP + TERM + ")*";;
     private static final String VOID = "\\s*void";
     private static final String CLOSE_BRACKETS = "\\s*}\\s*";
     private static final String OPEN_BRACKETS = "\\s*\\{\\s*";
     private static final String RETURN = "\\s*return\\s*";
+    private static final String COMMENT = "\\\\\\\\.*";
 
     public static List<String> getLine(String line) {
         if (line.matches( IF_WHILE + "\\(" + CONDITION + "\\)" + OPEN_BRACKETS)) {
@@ -67,8 +68,16 @@ public class SyntaxValidator {
         if (line.matches(CLOSE_BRACKETS)) {
             return extractMethodEnd();
         }
-
+        if (line.matches( COMMENT)) {
+            return extractComment();
+        }
         return new ArrayList<>();
+    }
+
+    private static List<String> extractComment() {
+        List<String> list = new ArrayList<>();
+        list.add("\\\\");
+        return list;
     }
 
     private static List<String> extractMethodEnd() {
@@ -98,15 +107,15 @@ public class SyntaxValidator {
     }
 
     private static List<String> extractStatement(String line) {
-        String[] parts = line.split("(?<=if|while)|(?=\\()|(?<=\\()|(?=(&&))|(?=(\\|\\|))|(?<=(&&))|(?<=(\\|\\|))|(?=\\))|(?=\\{)");
+        String[] parts = line.split("(?<=if|while)|(?<=\\()|(?=(&&))|(?=(\\|\\|))|(?<=(&&))|(?<=(\\|\\|))|(?=\\))|(?=\\{)");
         return getParsedLine(parts);
     }
 
     private static List<String> getParsedLine(String[] parts) {
         List<String> list = new ArrayList<>();
         for (String part : parts) {
+            part = part.trim();
             if (!part.isEmpty()) {
-                part = part.trim();
                 list.add(part);
             }
         }
