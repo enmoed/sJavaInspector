@@ -17,9 +17,7 @@ public class FuncTracker {
     }
 
     public static SortedMap<String, VariablesTypes> getFuncArgs(String funcName) throws FuncNotExistException {
-        if (!funcDict.containsKey(funcName)) {
-            throw new FuncNotExistException(funcName);
-        }
+        validateFuncExist(funcName);
         return funcDict.get(funcName).getParams();
     }
 
