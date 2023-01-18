@@ -10,4 +10,8 @@ public class Function {
     public SortedMap<String, VariablesTypes> getParams() {
         return params;
     }
+
+    public String getName() {
+        return name;
+    }
 }
