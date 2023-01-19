@@ -20,18 +20,20 @@ public class ScopeValidator {
         switch (statementType) {
             case METHOD_CALL: {
                 validateCallFuncCallStatement(statement);
+                break;
             }
-            case IF_CALL: {
-                validateIfWhileCallStatement(statement);
-            }
+            case IF_CALL:
             case WHILE_CALL: {
                 validateIfWhileCallStatement(statement);
+                break;
             }
             case VAR_DEC: {
                 validateVarDecStatement(statement);
+                break;
             }
             case VAR_ASSIGN: {
                 validateVarAssignStatement(statement);
+                break;
             }
         }
     }
@@ -218,6 +220,6 @@ public class ScopeValidator {
         }
     }
     private static boolean isVariable(String s){
-        return s.matches(CONST);
+        return !s.matches(CONST);
     }
 }

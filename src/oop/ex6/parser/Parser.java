@@ -15,9 +15,10 @@ import java.util.List;
 public class Parser {
 
     public static void run(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            firstLoop(reader);
-            secondLoop(reader);
+        try (BufferedReader readerFirstLoop = new BufferedReader(new FileReader(filePath));
+             BufferedReader readerSecondLoop = new BufferedReader(new FileReader(filePath))) {
+            firstLoop(readerFirstLoop);
+            secondLoop(readerSecondLoop);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -73,7 +74,7 @@ public class Parser {
                 ind += 1;
                 continue;
             }
-            f.addParam(statement.get(ind), VariablesTypes.stringMapper.get(statement.get(ind + 1)));
+            f.addParam(statement.get(ind+1), VariablesTypes.stringMapper.get(statement.get(ind)));
             ind += 2;
         }
         FuncTracker.addFunc(f);
@@ -87,6 +88,10 @@ public class Parser {
             if (statementType.equals(StatementTypes.METHOD_DEC)) {
                 VarTracker varTracker = new VarTracker();
                 // add all declared args to scopeVars...
+                var argsDict = FuncTracker.getFuncArgs(statementParse.get(2));
+                for(var argName:argsDict.keySet()){
+                    varTracker.addScopeVar(new Variable(argName,argsDict.get(argName)));
+                }
                 parseBlock(varTracker, true, reader);
             }
             // set all the global vars which didnt init as not init again (to check in the next func that they will init too)
@@ -95,7 +100,7 @@ public class Parser {
     }
 
     private static void parseBlock(VarTracker prevBlockVarTracker, boolean isFuncBlock, BufferedReader reader) throws VocabularyException, IOException, SyntaxException {
-        VarTracker varTracker = new VarTracker(prevBlockVarTracker);
+        VarTracker varTracker = new VarTracker(prevBlockVarTracker, isFuncBlock);
         ScopeValidator scopeValidator = new ScopeValidator(varTracker);
         StatementTypes lastStatementType = null;
         String statement = reader.readLine();

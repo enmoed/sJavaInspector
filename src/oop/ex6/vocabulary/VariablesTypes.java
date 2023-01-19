@@ -17,7 +17,7 @@ public enum VariablesTypes {
             put("int", INT);
             put("double", DOUBLE);
             put("boolean", BOOLEAN);
-            put("string", STRING);
+            put("String", STRING);
             put("char", CHAR);
         }
     };
@@ -27,15 +27,19 @@ public enum VariablesTypes {
             switch (type) {
                 case INT: {
                     VariablesTypes.validateInt(value);
+                    break;
                 }
                 case CHAR: {
                     VariablesTypes.validateChar(value);
+                    break;
                 }
                 case BOOLEAN: {
                     VariablesTypes.validateBoolean(value);
+                    break;
                 }
                 case DOUBLE: {
                     VariablesTypes.validateDouble(value);
+                    break;
                 }
                 case STRING: {
                     break; //always good

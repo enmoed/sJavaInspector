@@ -21,10 +21,10 @@ public class VarTracker {
         scopeVariableNames = new HashSet<>();
     }
 
-    public VarTracker(VarTracker prevScope) {
+    public VarTracker(VarTracker prevScope, boolean isFuncBlock) {
         scopeVarDict = new Hashtable<>();
         scopeVarDict.putAll(prevScope.scopeVarDict);
-        scopeVariableNames = new HashSet<>();
+        scopeVariableNames = (isFuncBlock) ? prevScope.getScopeVariableNames() : new HashSet<>();
     }
 
     public static void setGlobalVarWhichNotAssignOutsideFunctions(){
