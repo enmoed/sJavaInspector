@@ -65,14 +65,9 @@ public class VarTracker {
             throw new VarNotExistException(varName);
         }
     }
-    public VariablesTypes getVarType(String varName) throws VarNotExistException {
-        validateVarExist(varName);
-        Variable v = (!scopeVarDict.containsKey(varName)) ? scopeVarDict.get(varName) : globalVarDict.get(varName);
-        return v.getType();
-    }
     public Variable getVar(String varName) throws VarNotExistException {
         validateVarExist(varName);
-        return (!scopeVarDict.containsKey(varName)) ? scopeVarDict.get(varName) : globalVarDict.get(varName);
+        return (scopeVarDict.containsKey(varName)) ? scopeVarDict.get(varName) : globalVarDict.get(varName);
     }
     public static Variable getGlobalVar(String varName) throws VarNotExistException {
         validateGlobalVarExist(varName);
