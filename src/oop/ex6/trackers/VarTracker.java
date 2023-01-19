@@ -15,6 +15,7 @@ public class VarTracker {
     private Hashtable<String, Variable> scopeVarDict;
     private Set<String> scopeVariableNames; // because cant be 2 scope var with same name, and the scopeVarDict include prev scope
 
+    private static Set<String> globalVarWhichNotAssignOutsideFunctions = new HashSet<>();
     public VarTracker() {
         scopeVarDict = new Hashtable<>();
         scopeVariableNames = new HashSet<>();
@@ -24,6 +25,20 @@ public class VarTracker {
         scopeVarDict = new Hashtable<>();
         scopeVarDict.putAll(prevScope.scopeVarDict);
         scopeVariableNames = new HashSet<>();
+    }
+
+    public static void setGlobalVarWhichNotAssignOutsideFunctions(){
+        for(String name:globalVarDict.keySet()){
+            if(!globalVarDict.get(name).isInit()){globalVarWhichNotAssignOutsideFunctions.add(name);}
+        }
+    }
+
+    public static void resetInitOfGlobalVars(){
+        for(String name:globalVarDict.keySet()){
+            if(globalVarWhichNotAssignOutsideFunctions.contains(name)){
+                globalVarDict.get(name).resetAssign();
+            }
+        }
     }
 
     public static void addGlobalVar(Variable v) {
@@ -36,8 +51,17 @@ public class VarTracker {
     }
     public Set<String> getScopeVariableNames(){return scopeVariableNames;}
 
+    public static boolean isGlobalVarExist(String varName) {
+        return globalVarDict.containsKey(varName);
+    }
+
     public void validateVarExist(String varName) throws VarNotExistException {
         if (!scopeVarDict.containsKey(varName) && !globalVarDict.containsKey(varName)) {
+            throw new VarNotExistException(varName);
+        }
+    }
+    public static void validateGlobalVarExist(String varName) throws VarNotExistException {
+        if (!globalVarDict.containsKey(varName)) {
             throw new VarNotExistException(varName);
         }
     }
@@ -49,5 +73,9 @@ public class VarTracker {
     public Variable getVar(String varName) throws VarNotExistException {
         validateVarExist(varName);
         return (!scopeVarDict.containsKey(varName)) ? scopeVarDict.get(varName) : globalVarDict.get(varName);
+    }
+    public static Variable getGlobalVar(String varName) throws VarNotExistException {
+        validateGlobalVarExist(varName);
+        return globalVarDict.get(varName);
     }
 }

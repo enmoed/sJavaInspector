@@ -34,6 +34,9 @@ public class Variable {
     public void hasAssign() {
         isInit = true;
     }
+    public void resetAssign() {
+        isInit = false;
+    }
 
     public void validateValueConst(String value) throws VarTypeException {
         VariablesTypes.validateConstType(type,value);

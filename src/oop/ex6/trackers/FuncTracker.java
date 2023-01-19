@@ -24,4 +24,7 @@ public class FuncTracker {
     public static void addFunc(Function f) {
         funcDict.put(f.getName(), f);
     }
+    public static boolean isExist(String funcName) {
+        return funcDict.containsKey(funcName);
+    }
 }

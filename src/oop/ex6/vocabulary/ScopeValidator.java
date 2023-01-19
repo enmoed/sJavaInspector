@@ -7,6 +7,8 @@ import oop.ex6.vocabulary.exceptions.VocabularyException;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import static oop.ex6.vocabulary.SyntaxValidator.CONST;
+
 public class ScopeValidator {
     private VarTracker varTracker;
 
@@ -63,6 +65,21 @@ public class ScopeValidator {
         }
     }
 
+    public static void StaticvalidateExpression(String expression, VariablesTypes expectedType, boolean withCasting) throws VocabularyException {
+        if (isVariable(expression)) {
+            Variable expressionVar = VarTracker.getGlobalVar(expression);
+            //check if init
+            if (!expressionVar.isInit()) {
+                throw new VocabularyException("param didnt init");
+            }
+            //check if valid variable
+            VariablesTypes.validateVarType(expectedType, expressionVar.getType(), withCasting);
+        } else {
+            // validate const
+            VariablesTypes.validateConstType(expectedType, expression);
+        }
+    }
+
     public void validateVarAssignStatement(String[] statement) throws VocabularyException {
         for (int i = 0; i < statement.length; i += 4) {
             String varName = statement[i];
@@ -72,6 +89,19 @@ public class ScopeValidator {
             }
             String expression = statement[i + 2];
             validateExpression(expression, var.getType(), true);
+            var.hasAssign(); //TODO if it is global var and didnt init outside the function, should be init in each function
+        }
+    }
+
+    public static void validateGlobalVarAssignStatement(String[] statement) throws VocabularyException {
+        for (int i = 0; i < statement.length; i += 4) {
+            String varName = statement[i];
+            Variable var = VarTracker.getGlobalVar(varName);
+            if (var.isFinal()) {
+                throw new VocabularyException("var is final and can not assigned again");
+            }
+            String expression = statement[i + 2];
+            StaticvalidateExpression(expression, var.getType(), true);
             var.hasAssign(); //TODO if it is global var and didnt init outside the function, should be init in each function
         }
     }
@@ -120,6 +150,50 @@ public class ScopeValidator {
         }
     }
 
+    public static void validateGlobalVarDecStatement(String[] statement) throws VocabularyException {
+        boolean isFinal = statement[0].equals("final"); //TODO check that there is init
+        int start = (isFinal) ? 1 : 0;
+        VariablesTypes type = VariablesTypes.stringMapper.get(statement[start]);
+        int ind = start + 1;
+        boolean isVarName = true;
+        int varNamesStart = ind;
+        while (!statement[ind].equals(";")) {
+            if (statement[ind].equals("=")) {
+                isVarName = false;
+                ind += 1;
+                continue;
+            }
+            if (statement[ind].equals(",") && !isVarName) {
+                isVarName = true;
+                ind += 1;
+                varNamesStart = ind;
+                continue;
+            }
+            if (statement[ind].equals(",") && isVarName) {
+                ind += 1;
+                continue;
+            }
+            if (isVarName) {
+                Variable var = new Variable(statement[ind], type, isFinal);
+                if (VarTracker.isGlobalVarExist(var.getName())) {
+                    throw new VocabularyException(String.format("global var with name %s already declared.", var.getName()));
+                }
+                VarTracker.addGlobalVar(var);
+            } else {//const init
+                String constTerm = statement[ind];
+                VariablesTypes.validateConstType(type, constTerm);
+                //update that varNames assign
+                while (!statement[varNamesStart].equals("=")) {
+                    if (!statement[varNamesStart].equals(",")) {
+                        VarTracker.getGlobalVar(statement[varNamesStart]).hasAssign();
+                    }
+                    varNamesStart += 1;
+                }
+            }
+            ind += 1;
+        }
+    }
+
     public void validateIfWhileCallStatement(String[] statement) throws VocabularyException {
         String[] condition = Arrays.copyOfRange(statement, 3, statement.length - 2);
         validateCondition(condition);
@@ -136,11 +210,14 @@ public class ScopeValidator {
                     throw new VocabularyException("var didnt assign");
                 }
                 //check if valid variable
-                VariablesTypes.validateVarType(VariablesTypes.BOOLEAN, termVar.getType());
+                VariablesTypes.validateVarType(VariablesTypes.BOOLEAN, termVar.getType(), true);
             } else {
                 // validate const
                 VariablesTypes.validateBoolean(term);
             }
         }
+    }
+    private static boolean isVariable(String s){
+        return s.matches(CONST);
     }
 }

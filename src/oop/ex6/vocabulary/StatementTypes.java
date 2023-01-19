@@ -9,7 +9,9 @@ public enum StatementTypes {
     IF_CALL,
     WHILE_CALL,
     VAR_ASSIGN,
-    RETURN;
+    RETURN,
+    END_OF_BLOCK,
+    COMMENT;
     public static Hashtable<String, StatementTypes> stringMapper = new Hashtable<>() {
         {
             put("VAR_DEC", VAR_DEC);
@@ -19,6 +21,8 @@ public enum StatementTypes {
             put("VAR_ASSIGN", VAR_ASSIGN);
             put("RETURN", RETURN);
             put("METHOD_DEC", METHOD_DEC);
+            put("//", COMMENT);
+            put("}", END_OF_BLOCK);
         }
     };
 }

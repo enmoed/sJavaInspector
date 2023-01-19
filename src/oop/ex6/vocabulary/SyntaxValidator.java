@@ -13,7 +13,8 @@ public class SyntaxValidator {
     private static final String CHAR = "\\s*'\\s*.\\s*'\\s*";
     private static final String BOOL = "\\s*(false|true)\\s*";
     private static final String END_LINE = ";\\s*";
-    private static final String VAR = "(" + INT + "|" + DOUBLE + "|" + LITERAL + "|" + CHAR + "|" + BOOL + "|" + VAR_NAME + ")";
+    public static final String CONST =  INT + "|" + DOUBLE + "|" + LITERAL + "|" + CHAR + "|" + BOOL ;
+    private static final String VAR = "(" + CONST + "|" + VAR_NAME + ")";
     private static final String VAR_LIST = "\\s*(" + VAR + "(," + VAR + ")*)?";
     private static final String BOOL_OR_DOUBLE = "(" + BOOL + "|" + DOUBLE + ")";
     private static final String IF_WHILE = "\\s*(if|while)\\s*";
