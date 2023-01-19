@@ -71,7 +71,6 @@ public class Parser {
             }
             // set all the global vars which didnt init as not init again (to check in the next func that they will init too)
             VarTracker.resetInitOfGlobalVars();
-            // TODO check that end with return
             statement = getNextStatement();
         }
     }
