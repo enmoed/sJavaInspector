@@ -1,5 +1,7 @@
 package oop.ex6.vocabulary;
 
+import oop.ex6.vocabulary.exceptions.SyntaxException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class SyntaxValidator {
     private static final String COMMENT = "\\\\\\\\.*";
     private static final String FINAL = "\\s*(final)?\\s*";
 
-    public static List<String> getLine(String line) {
+    public static List<String> getLine(String line) throws SyntaxException {
         if (line.matches( IF + "\\(" + CONDITION + "\\)" + OPEN_BRACKETS)) {
             return extractIfStatement(line);
         }
@@ -97,7 +99,7 @@ public class SyntaxValidator {
         if (line.matches( COMMENT)) {
             return extractComment();
         }
-        return new ArrayList<>();
+        throw new SyntaxException(line);
     }
 
     private static List<String> extractComment() {
