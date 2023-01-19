@@ -92,7 +92,7 @@ public class SyntaxValidator {
             return extractAssignment(line);
         }
         if (line.matches(CLOSE_BRACKETS)) {
-            return extractMethodEnd();
+            return extractBlockEnd();
         }
         if (line.matches( COMMENT)) {
             return extractComment();
@@ -107,9 +107,9 @@ public class SyntaxValidator {
         return list;
     }
 
-    private static List<String> extractMethodEnd() {
+    private static List<String> extractBlockEnd() {
         List<String> list = new ArrayList<>();
-        list.add(StatementTypes.METHOD_END.toString());
+        list.add(StatementTypes.END_OF_BLOCK.toString());
         list.add("}");
         return list;
     }

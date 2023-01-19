@@ -99,16 +99,16 @@ public class SyntaxValidatorTest {
     @Test
     public void testGetLine_closeBrackets() {
         String input = "  }  ";
-        List<String> expected = List.of("METHOD_END", "}");
+        List<String> expected = List.of("BLOCK_END", "}");
         assertEquals(expected, SyntaxValidator.getLine(input));
         input = "}";
-        expected = List.of("METHOD_END", "}");
+        expected = List.of("BLOCK_END", "}");
         assertEquals(expected, SyntaxValidator.getLine(input));
         input = " }";
-        expected = List.of("METHOD_END", "}");
+        expected = List.of("BLOCK_END", "}");
         assertEquals(expected, SyntaxValidator.getLine(input));
         input = "} ";
-        expected = List.of("METHOD_END", "}");
+        expected = List.of("BLOCK_END", "}");
         assertEquals(expected, SyntaxValidator.getLine(input));
         input = "; }  ";
         expected = List.of();

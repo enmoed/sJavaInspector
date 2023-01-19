@@ -6,7 +6,6 @@ public enum StatementTypes {
     VAR_DEC,
     METHOD_CALL,
     METHOD_DEC,
-    METHOD_END,
     IF_CALL,
     WHILE_CALL,
     VAR_ASSIGN,
@@ -22,8 +21,8 @@ public enum StatementTypes {
             put("VAR_ASSIGN", VAR_ASSIGN);
             put("RETURN", RETURN);
             put("METHOD_DEC", METHOD_DEC);
-            put("//", COMMENT);
-            put("}", END_OF_BLOCK);
+            put("COMMENT", COMMENT);
+            put("END_OF_BLOCK", END_OF_BLOCK);
         }
     };
 }
