@@ -73,4 +73,8 @@ public class VarTracker {
         validateGlobalVarExist(varName);
         return globalVarDict.get(varName);
     }
+    public static void reset(){ //for tests
+        globalVarDict = new Hashtable<>();
+        globalVarWhichNotAssignOutsideFunctions = new HashSet<>();
+    }
 }

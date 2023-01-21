@@ -30,7 +30,7 @@ public class SyntaxValidator {
     private static final String CLOSE_BRACKETS = "\\s*}\\s*";
     private static final String OPEN_BRACKETS = "\\s*\\{\\s*";
     private static final String RETURN = "\\s*return\\s*";
-    private static final String COMMENT = "(\\\\\\\\)|(//).*";
+    private static final String COMMENT = "//.*";
     private static final String FINAL = "\\s*(final)?\\s*";
 
     public static List<String> getLine(String line) throws SyntaxException {
@@ -49,44 +49,44 @@ public class SyntaxValidator {
         if (line.matches(VAR_NAME + "\\(" + VAR_LIST + "\\)\\s*" + END_LINE)) {
             return extractMethodCall(line);
         }
-        if (line.matches(FINAL + "int(" + VAR_NAME + "=" + INT + ")" +
-                "(," + VAR_NAME + "=" + INT + "?)*" + END_LINE)) {
+        if (line.matches(FINAL + "int(" + VAR_NAME + "=" + "(" + INT + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + INT + "|" + VAR_NAME + ")" + "?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "double(" + VAR_NAME + "=" + DOUBLE + ")" +
-                "(," + VAR_NAME + "=" + DOUBLE + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "double(" + VAR_NAME + "=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "String(" + VAR_NAME + "=" + LITERAL + ")" +
-                "(," + VAR_NAME + "=" + LITERAL + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "String(" + VAR_NAME + "=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "boolean(" + VAR_NAME + "=" + BOOL_OR_DOUBLE + ")" +
-                "(," + VAR_NAME + "=" + BOOL_OR_DOUBLE + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "boolean(" + VAR_NAME + "=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "char(" + VAR_NAME + "=" + CHAR + ")" +
-                "(," + VAR_NAME + "=" + CHAR + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "char(" + VAR_NAME + "=" + "(" + CHAR + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + CHAR + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*int(" + VAR_NAME + "(=" + INT + ")?)" +
-                "(," + VAR_NAME + "(=" + INT + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*int(" + VAR_NAME + "(=" + "(" + INT + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + INT + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*double(" + VAR_NAME + "(=" + DOUBLE + ")?)" +
-                "(," + VAR_NAME + "(=" + DOUBLE + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*double(" + VAR_NAME + "(=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*String(" + VAR_NAME + "(=" + LITERAL + ")?)" +
-                "(," + VAR_NAME + "(=" + LITERAL + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*String(" + VAR_NAME + "(=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*boolean(" + VAR_NAME + "(=" + BOOL_OR_DOUBLE + ")?)" +
-                "(," + VAR_NAME + "(=" + BOOL_OR_DOUBLE + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*boolean(" + VAR_NAME + "(=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*char(" + VAR_NAME + "(=" + CHAR + ")?)" +
-                "(," + VAR_NAME + "(=" + CHAR + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*char(" + VAR_NAME + "(=" + "(" + CHAR + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + CHAR + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
         if (line.matches("\\s*(" + VAR_NAME + "=" + VAR + ")" +

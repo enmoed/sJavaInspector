@@ -137,9 +137,8 @@ public class ScopeValidator {
                     throw new VocabularyException(String.format("var with name %s already declared in the current block.", var.getName()));
                 }
                 varTracker.addScopeVar(var);
-            } else {//const init
-                String constTerm = statement[ind];
-                VariablesTypes.validateConstType(type, constTerm);
+            } else {
+                validateExpression(statement[ind], type, true);
                 //update that varNames assign
                 while (!statement[varNamesStart].equals("=")) {
                     if (!statement[varNamesStart].equals(",")) {
@@ -181,9 +180,8 @@ public class ScopeValidator {
                     throw new VocabularyException(String.format("global var with name %s already declared.", var.getName()));
                 }
                 VarTracker.addGlobalVar(var);
-            } else {//const init
-                String constTerm = statement[ind];
-                VariablesTypes.validateConstType(type, constTerm);
+            } else {
+                StaticvalidateExpression(statement[ind], type, true);
                 //update that varNames assign
                 while (!statement[varNamesStart].equals("=")) {
                     if (!statement[varNamesStart].equals(",")) {
@@ -219,7 +217,8 @@ public class ScopeValidator {
             }
         }
     }
-    private static boolean isVariable(String s){
+
+    private static boolean isVariable(String s) {
         return !s.matches(CONST);
     }
 }
