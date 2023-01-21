@@ -1,0 +1,9 @@
+// test fail
+
+// some int member
+double a = 5;
+
+void f(int b){
+b=a;
+return;
+}

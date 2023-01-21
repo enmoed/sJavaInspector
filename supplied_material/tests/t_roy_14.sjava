@@ -1,0 +1,20 @@
+// test global var not init assign only in function which using it. fail
+
+// some int member
+int a;
+
+void f(int c){
+int b=5;
+return;
+}
+
+void h(){
+a=5;
+int c=a;
+return;
+}
+
+void r(){
+int c=a;
+return;
+}

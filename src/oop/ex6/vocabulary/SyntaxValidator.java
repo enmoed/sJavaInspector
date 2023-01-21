@@ -1,5 +1,7 @@
 package oop.ex6.vocabulary;
 
+import oop.ex6.vocabulary.exceptions.SyntaxException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,8 @@ public class SyntaxValidator {
     private static final String CHAR = "\\s*'\\s*.\\s*'\\s*";
     private static final String BOOL = "\\s*(false|true)\\s*";
     private static final String END_LINE = ";\\s*";
-    private static final String VAR = "(" + INT + "|" + DOUBLE + "|" + LITERAL + "|" + CHAR + "|" + BOOL + "|" + VAR_NAME + ")";
+    public static final String CONST =  INT + "|" + DOUBLE + "|" + LITERAL + "|" + CHAR + "|" + BOOL ;
+    private static final String VAR = "(" + CONST + "|" + VAR_NAME + ")";
     private static final String VAR_LIST = "\\s*(" + VAR + "(," + VAR + ")*)?";
     private static final String BOOL_OR_DOUBLE = "(" + BOOL + "|" + DOUBLE + ")";
     private static final String IF = "\\s*if\\s*";
@@ -27,10 +30,10 @@ public class SyntaxValidator {
     private static final String CLOSE_BRACKETS = "\\s*}\\s*";
     private static final String OPEN_BRACKETS = "\\s*\\{\\s*";
     private static final String RETURN = "\\s*return\\s*";
-    private static final String COMMENT = "\\\\\\\\.*";
+    private static final String COMMENT = "//.*";
     private static final String FINAL = "\\s*(final)?\\s*";
 
-    public static List<String> getLine(String line) {
+    public static List<String> getLine(String line) throws SyntaxException {
         if (line.matches( IF + "\\(" + CONDITION + "\\)" + OPEN_BRACKETS)) {
             return extractIfStatement(line);
         }
@@ -46,44 +49,44 @@ public class SyntaxValidator {
         if (line.matches(VAR_NAME + "\\(" + VAR_LIST + "\\)\\s*" + END_LINE)) {
             return extractMethodCall(line);
         }
-        if (line.matches(FINAL + "int(" + VAR_NAME + "=" + INT + ")" +
-                "(," + VAR_NAME + "=" + INT + "?)*" + END_LINE)) {
+        if (line.matches(FINAL + "int(" + VAR_NAME + "=" + "(" + INT + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + INT + "|" + VAR_NAME + ")" + "?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "double(" + VAR_NAME + "=" + DOUBLE + ")" +
-                "(," + VAR_NAME + "=" + DOUBLE + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "double(" + VAR_NAME + "=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "String(" + VAR_NAME + "=" + LITERAL + ")" +
-                "(," + VAR_NAME + "=" + LITERAL + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "String(" + VAR_NAME + "=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "boolean(" + VAR_NAME + "=" + BOOL_OR_DOUBLE + ")" +
-                "(," + VAR_NAME + "=" + BOOL_OR_DOUBLE + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "boolean(" + VAR_NAME + "=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "char(" + VAR_NAME + "=" + CHAR + ")" +
-                "(," + VAR_NAME + "=" + CHAR + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "char(" + VAR_NAME + "=" + "(" + CHAR + "|" + VAR_NAME + ")" + ")" +
+                "(," + VAR_NAME + "=" + "(" + CHAR + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*int(" + VAR_NAME + "(=" + INT + ")?)" +
-                "(," + VAR_NAME + "(=" + INT + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*int(" + VAR_NAME + "(=" + "(" + INT + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + INT + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*double(" + VAR_NAME + "(=" + DOUBLE + ")?)" +
-                "(," + VAR_NAME + "(=" + DOUBLE + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*double(" + VAR_NAME + "(=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*String(" + VAR_NAME + "(=" + LITERAL + ")?)" +
-                "(," + VAR_NAME + "(=" + LITERAL + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*String(" + VAR_NAME + "(=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*boolean(" + VAR_NAME + "(=" + BOOL_OR_DOUBLE + ")?)" +
-                "(," + VAR_NAME + "(=" + BOOL_OR_DOUBLE + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*boolean(" + VAR_NAME + "(=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches("\\s*char(" + VAR_NAME + "(=" + CHAR + ")?)" +
-                "(," + VAR_NAME + "(=" + CHAR + ")?)*" + END_LINE)) {
+        if (line.matches("\\s*char(" + VAR_NAME + "(=" + "(" + CHAR + "|" + VAR_NAME + ")" + ")?)" +
+                "(," + VAR_NAME + "(=" + "(" + CHAR + "|" + VAR_NAME + ")" + ")?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
         if (line.matches("\\s*(" + VAR_NAME + "=" + VAR + ")" +
@@ -91,12 +94,15 @@ public class SyntaxValidator {
             return extractAssignment(line);
         }
         if (line.matches(CLOSE_BRACKETS)) {
-            return extractMethodEnd();
+            return extractBlockEnd();
         }
         if (line.matches( COMMENT)) {
             return extractComment();
         }
-        return new ArrayList<>();
+        if(line.matches("\\s")||line.isEmpty()){
+            return extractComment(); //TODO need to deal with empty line
+        }
+        throw new SyntaxException(line);
     }
 
     private static List<String> extractComment() {
@@ -106,9 +112,9 @@ public class SyntaxValidator {
         return list;
     }
 
-    private static List<String> extractMethodEnd() {
+    private static List<String> extractBlockEnd() {
         List<String> list = new ArrayList<>();
-        list.add(StatementTypes.METHOD_END.toString());
+        list.add(StatementTypes.END_OF_BLOCK.toString());
         list.add("}");
         return list;
     }

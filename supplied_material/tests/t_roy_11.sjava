@@ -1,0 +1,9 @@
+// test pass
+
+// some int member
+int a = 5;
+
+void f(boolean b){
+b=a;
+return;
+}

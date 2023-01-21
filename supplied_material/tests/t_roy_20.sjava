@@ -1,0 +1,13 @@
+// test local variable using outside scope fail
+
+// some int member
+int a;
+
+void f(int c){
+int b=5;
+if(b){
+int c = 5;
+}
+b=c;
+return;
+}

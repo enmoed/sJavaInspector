@@ -1,0 +1,10 @@
+// test final - good (declared again in f)
+
+// some int member
+final int a = 5;
+
+void f(){
+int a;
+a=7;
+return;
+}

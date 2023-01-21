@@ -1,0 +1,9 @@
+// test fail a declared twice in function
+
+// some int member
+int a = 5;
+
+void f(int a){
+int a;
+a=7;
+}
