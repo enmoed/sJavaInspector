@@ -87,7 +87,8 @@ public enum VariablesTypes {
         }
     }
 
-    public static void validateVarType(VariablesTypes assigned, VariablesTypes assign, boolean withCasting) throws VarTypeNotMatchException {
+    public static void validateVarType(VariablesTypes assigned, VariablesTypes assign, boolean withCasting)
+            throws VarTypeNotMatchException {
         if (assigned.equals(assign)) {
             return;
         }

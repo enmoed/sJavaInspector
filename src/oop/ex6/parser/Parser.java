@@ -19,14 +19,19 @@ public class Parser {
              BufferedReader readerSecondLoop = new BufferedReader(new FileReader(filePath))) {
             firstLoop(readerFirstLoop);
             secondLoop(readerSecondLoop);
+            System.exit(0);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.out.println(String.format("%s file not found", filePath));
+            System.exit(2);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(String.format("program exit with IOException: %s", e.getMessage()));
+            System.exit(2);
         } catch (VocabularyException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
+            System.exit(1);
         } catch (SyntaxException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
+            System.exit(1);
         }
     }
 
@@ -65,7 +70,7 @@ public class Parser {
     private static void addFunctionToTracker(List<String> statement) throws VocabularyException {
         String name = statement.get(1);
         if (FuncTracker.isExist(name)) {
-            throw new VocabularyException(String.format("function %s already declared", name));
+            throw new VocabularyException(String.format("function %s already declared.", name));
         }
         Function f = new Function(name);
         int ind = 3;
@@ -74,7 +79,7 @@ public class Parser {
                 ind += 1;
                 continue;
             }
-            f.addParam(statement.get(ind+1), VariablesTypes.stringMapper.get(statement.get(ind)));
+            f.addParam(statement.get(ind + 1), VariablesTypes.stringMapper.get(statement.get(ind)));
             ind += 2;
         }
         FuncTracker.addFunc(f);
@@ -89,17 +94,19 @@ public class Parser {
                 VarTracker varTracker = new VarTracker();
                 // add all declared args to scopeVars...
                 var argsDict = FuncTracker.getFuncArgs(statementParse.get(2));
-                for(var argName:argsDict.keySet()){
-                    varTracker.addScopeVar(new Variable(argName,argsDict.get(argName)));
+                for (var argName : argsDict.keySet()) {
+                    varTracker.addScopeVar(new Variable(argName, argsDict.get(argName)));
                 }
                 parseBlock(varTracker, true, reader);
             }
-            // set all the global vars which didnt init as not init again (to check in the next func that they will init too)
+            // set all the global vars which didnt init as not init again
+            // (to check in the next func that they will init too)
             VarTracker.resetInitOfGlobalVars();
         }
     }
 
-    private static void parseBlock(VarTracker prevBlockVarTracker, boolean isFuncBlock, BufferedReader reader) throws VocabularyException, IOException, SyntaxException {
+    private static void parseBlock(VarTracker prevBlockVarTracker, boolean isFuncBlock, BufferedReader reader)
+            throws VocabularyException, IOException, SyntaxException {
         VarTracker varTracker = new VarTracker(prevBlockVarTracker, isFuncBlock);
         ScopeValidator scopeValidator = new ScopeValidator(varTracker);
         StatementTypes lastStatementType = null;
@@ -107,7 +114,8 @@ public class Parser {
         List<String> statementParse = SyntaxValidator.getLine(statement);
         StatementTypes statementType = StatementTypes.stringMapper.get(statementParse.get(0));
         while (!statementType.equals(StatementTypes.END_OF_BLOCK)) {
-            scopeValidator.validateStatement(statementType, statementParse.subList(1, statementParse.size()).toArray(new String[0]));
+            scopeValidator.validateStatement(statementType,
+                    statementParse.subList(1, statementParse.size()).toArray(new String[0]));
             if (statementType.equals(StatementTypes.IF_CALL) || statementType.equals(StatementTypes.WHILE_CALL)) {
                 parseBlock(varTracker, false, reader);
             }

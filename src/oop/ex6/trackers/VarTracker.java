@@ -13,9 +13,11 @@ import java.util.Set;
 public class VarTracker {
     private static Hashtable<String, Variable> globalVarDict = new Hashtable<>();
     private Hashtable<String, Variable> scopeVarDict;
-    private Set<String> scopeVariableNames; // because cant be 2 scope var with same name, and the scopeVarDict include prev scope
+    // because cant be 2 scope var with same name, and the scopeVarDict include prev scope
+    private Set<String> scopeVariableNames;
 
     private static Set<String> globalVarWhichNotAssignOutsideFunctions = new HashSet<>();
+
     public VarTracker() {
         scopeVarDict = new Hashtable<>();
         scopeVariableNames = new HashSet<>();
@@ -27,15 +29,17 @@ public class VarTracker {
         scopeVariableNames = (isFuncBlock) ? prevScope.getScopeVariableNames() : new HashSet<>();
     }
 
-    public static void setGlobalVarWhichNotAssignOutsideFunctions(){
-        for(String name:globalVarDict.keySet()){
-            if(!globalVarDict.get(name).isInit()){globalVarWhichNotAssignOutsideFunctions.add(name);}
+    public static void setGlobalVarWhichNotAssignOutsideFunctions() {
+        for (String name : globalVarDict.keySet()) {
+            if (!globalVarDict.get(name).isInit()) {
+                globalVarWhichNotAssignOutsideFunctions.add(name);
+            }
         }
     }
 
-    public static void resetInitOfGlobalVars(){
-        for(String name:globalVarDict.keySet()){
-            if(globalVarWhichNotAssignOutsideFunctions.contains(name)){
+    public static void resetInitOfGlobalVars() {
+        for (String name : globalVarDict.keySet()) {
+            if (globalVarWhichNotAssignOutsideFunctions.contains(name)) {
                 globalVarDict.get(name).resetAssign();
             }
         }
@@ -49,7 +53,10 @@ public class VarTracker {
         scopeVarDict.put(v.getName(), v);
         scopeVariableNames.add(v.getName());
     }
-    public Set<String> getScopeVariableNames(){return scopeVariableNames;}
+
+    public Set<String> getScopeVariableNames() {
+        return scopeVariableNames;
+    }
 
     public static boolean isGlobalVarExist(String varName) {
         return globalVarDict.containsKey(varName);
@@ -60,20 +67,24 @@ public class VarTracker {
             throw new VarNotExistException(varName);
         }
     }
+
     public static void validateGlobalVarExist(String varName) throws VarNotExistException {
         if (!globalVarDict.containsKey(varName)) {
             throw new VarNotExistException(varName);
         }
     }
+
     public Variable getVar(String varName) throws VarNotExistException {
         validateVarExist(varName);
         return (scopeVarDict.containsKey(varName)) ? scopeVarDict.get(varName) : globalVarDict.get(varName);
     }
+
     public static Variable getGlobalVar(String varName) throws VarNotExistException {
         validateGlobalVarExist(varName);
         return globalVarDict.get(varName);
     }
-    public static void reset(){ //for tests
+
+    public static void reset() { //for tests
         globalVarDict = new Hashtable<>();
         globalVarWhichNotAssignOutsideFunctions = new HashSet<>();
     }
