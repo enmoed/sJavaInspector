@@ -1,0 +1,11 @@
+// test function not end with return fail
+
+// some int member
+int a;
+
+void f(int c){
+int b=5;
+if(b){
+return;
+}
+}

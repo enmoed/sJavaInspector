@@ -1,0 +1,8 @@
+// test final - fail
+
+// some int member
+final int a = 5;
+
+void f(){
+a=7;
+}
