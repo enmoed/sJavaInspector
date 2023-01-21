@@ -99,7 +99,7 @@ public class SyntaxValidator {
         if (line.matches( COMMENT)) {
             return extractComment();
         }
-        if(line.matches("\\s")||line.isEmpty()){
+        if(line.matches("\\s*")||line.isEmpty()){
             return extractComment(); //TODO need to deal with empty line
         }
         throw new SyntaxException(line);
