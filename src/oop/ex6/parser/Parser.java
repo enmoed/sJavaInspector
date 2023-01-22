@@ -127,7 +127,17 @@ public class Parser {
                 ind += 1;
                 continue;
             }
-            f.addParam(statement.get(ind + 1), VariablesTypes.stringMapper.get(statement.get(ind)));
+            if (statement.get(ind).equals("final")) {
+                Variable param = new Variable(statement.get(ind + 2),
+                        VariablesTypes.stringMapper.get(statement.get(ind) + 1),
+                        true);
+            }
+            Variable param = (statement.get(ind).equals("final")) ? new Variable(statement.get(ind + 2),
+                    VariablesTypes.stringMapper.get(statement.get(ind) + 1),
+                    true) :
+                    new Variable(statement.get(ind + 1),
+                            VariablesTypes.stringMapper.get(statement.get(ind)));
+            f.addParam(param);
             ind += 2;
         }
         FuncTracker.addFunc(f);
@@ -151,7 +161,7 @@ public class Parser {
                 // add all declared args to scopeVars...
                 var argsDict = FuncTracker.getFuncArgs(statementParse.get(2));
                 for (var argName : argsDict.keySet()) {
-                    varTracker.addScopeVar(new Variable(argName, argsDict.get(argName)));
+                    varTracker.addScopeVar(argsDict.get(argName));
                 }
                 parseBlock(varTracker, true, reader);
             }

@@ -1,6 +1,7 @@
 package oop.ex6.trackers;
 
 import oop.ex6.vocabulary.Function;
+import oop.ex6.vocabulary.Variable;
 import oop.ex6.vocabulary.VariablesTypes;
 import oop.ex6.vocabulary.exceptions.FuncNotExistException;
 
@@ -25,7 +26,7 @@ public class FuncTracker {
      * @return
      * @throws FuncNotExistException
      */
-    public static SortedMap<String, VariablesTypes> getFuncArgs(String funcName) throws FuncNotExistException {
+    public static SortedMap<String, Variable> getFuncArgs(String funcName) throws FuncNotExistException {
         validateFuncExist(funcName);
         return funcDict.get(funcName).getParams();
     }

@@ -63,7 +63,7 @@ public class ScopeValidator {
                 throw new VocabularyException(String.format("function %s received too many arguments.", funcName));
             }
             String currParamName = paramsNamesIterator.next();
-            validateExpression(statement[i], params.get(currParamName), true);
+            validateExpression(statement[i], params.get(currParamName).getType(), true);
         }
 
     }
