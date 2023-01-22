@@ -5,6 +5,10 @@ import oop.ex6.vocabulary.exceptions.VarTypeNotMatchException;
 
 import java.util.Hashtable;
 
+/**
+ * all the variables types.
+ * also has static methods for comparison between types.
+ */
 public enum VariablesTypes {
     INT,
     DOUBLE,
@@ -22,7 +26,7 @@ public enum VariablesTypes {
         }
     };
 
-    public static void validateConstType(VariablesTypes type, String value) throws VarTypeException{
+    public static void validateConstType(VariablesTypes type, String value) throws VarTypeException {
         try {
             switch (type) {
                 case INT: {
@@ -42,7 +46,9 @@ public enum VariablesTypes {
                     break;
                 }
                 case STRING: {
-                    break; //always good
+                    if(!(value.charAt(0)=='"'&&value.charAt(value.length()-1)=='"')){
+                        throw new VarTypeException(VariablesTypes.STRING,value);
+                    }
                 }
             }
         } catch (VarTypeException e) {
@@ -59,7 +65,7 @@ public enum VariablesTypes {
     }
 
     public static void validateChar(String s) throws VarTypeException {
-        if (s.length() != 1) {
+        if (!(s.startsWith("'") && s.endsWith("'") && s.length() == 3)) {
             throw new VarTypeException(CHAR, s);
         }
     }
@@ -92,7 +98,7 @@ public enum VariablesTypes {
         if (assigned.equals(assign)) {
             return;
         }
-        if(withCasting){
+        if (withCasting) {
             switch (assigned) {
                 case BOOLEAN: {
                     if (assign.equals(INT) || assign.equals(DOUBLE)) {

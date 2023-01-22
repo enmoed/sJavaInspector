@@ -9,6 +9,10 @@ import java.util.Iterator;
 
 import static oop.ex6.vocabulary.SyntaxValidator.CONST;
 
+/**
+ * class for validate a scope.
+ * uses the FuncTracker class and has a VarTracker instance.
+ */
 public class ScopeValidator {
     private VarTracker varTracker;
 
@@ -16,6 +20,14 @@ public class ScopeValidator {
         this.varTracker = varTracker;
     }
 
+    /**
+     * the main method of the class - get a statementType and a parsed statement and
+     * if there is a problem it throws a VocabularyException.
+     *
+     * @param statementType
+     * @param statement
+     * @throws VocabularyException
+     */
     public void validateStatement(StatementTypes statementType, String[] statement) throws VocabularyException {
         switch (statementType) {
             case METHOD_CALL: {
@@ -38,6 +50,12 @@ public class ScopeValidator {
         }
     }
 
+    /**
+     * check that function declared and the params are legal (type and amount wise).
+     *
+     * @param statement
+     * @throws VocabularyException
+     */
     public void validateCallFuncCallStatement(String[] statement) throws VocabularyException {
         String funcName = statement[0];
         var params = FuncTracker.getFuncArgs(funcName);
@@ -47,7 +65,11 @@ public class ScopeValidator {
                 throw new VocabularyException(String.format("function %s received too many arguments.", funcName));
             }
             String currParamName = paramsNamesIterator.next();
-            validateExpression(statement[i], params.get(currParamName), true);
+            validateExpression(statement[i], params.get(currParamName).getType(), true);
+        }
+        if (paramsNamesIterator.hasNext()) {
+            throw new VocabularyException(
+                    String.format("%s didn't gets enough params.", funcName));
         }
 
     }
@@ -203,7 +225,7 @@ public class ScopeValidator {
     }
 
     public void validateIfWhileCallStatement(String[] statement) throws VocabularyException {
-        String[] condition = Arrays.copyOfRange(statement, 3, statement.length - 2);
+        String[] condition = Arrays.copyOfRange(statement, 2, statement.length - 2);
         validateCondition(condition);
     }
 
