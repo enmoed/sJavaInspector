@@ -15,24 +15,20 @@ import java.util.List;
 public class Parser {
 
     public static void run(String filePath) {
+        int code;
         try (BufferedReader readerFirstLoop = new BufferedReader(new FileReader(filePath));
              BufferedReader readerSecondLoop = new BufferedReader(new FileReader(filePath))) {
             firstLoop(readerFirstLoop);
             secondLoop(readerSecondLoop);
-            System.exit(0);
-        } catch (FileNotFoundException e) {
-            System.out.println(String.format("%s file not found", filePath));
-            System.exit(2);
+            code = 0;
         } catch (IOException e) {
-            System.out.println(String.format("program exit with IOException: %s", e.getMessage()));
-            System.exit(2);
-        } catch (VocabularyException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
-        } catch (SyntaxException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
+            System.err.println(e.getMessage());
+            code = 2;
+        } catch (VocabularyException | SyntaxException e) {
+            System.err.println(e.getMessage());
+            code = 1;
         }
+        System.out.println(code);
     }
 
     private static void firstLoop(BufferedReader reader) throws VocabularyException, IOException, SyntaxException {
