@@ -3,7 +3,7 @@
 // some int member
 int a;
 
-void f(int c){
+void f(){
 int b=5;
 if(b){
 int c = 5;

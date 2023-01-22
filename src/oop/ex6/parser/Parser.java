@@ -2,9 +2,9 @@ package oop.ex6.parser;
 
 import oop.ex6.trackers.FuncTracker;
 import oop.ex6.trackers.VarTracker;
-import oop.ex6.vocabulary.*;
-import oop.ex6.vocabulary.exceptions.SyntaxException;
-import oop.ex6.vocabulary.exceptions.VocabularyException;
+import oop.ex6.grammar.*;
+import oop.ex6.grammar.exceptions.SyntaxException;
+import oop.ex6.grammar.exceptions.GrammarException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -32,7 +32,7 @@ public class Parser {
         } catch (IOException e) {
             System.err.println(e.getMessage());
             code = 2;
-        } catch (VocabularyException | SyntaxException e) {
+        } catch (GrammarException | SyntaxException e) {
             System.err.println(e.getMessage());
             code = 1;
         }
@@ -45,11 +45,11 @@ public class Parser {
      * also verify that there is no if/while outside a function.
      *
      * @param reader
-     * @throws VocabularyException
+     * @throws GrammarException
      * @throws IOException
      * @throws SyntaxException
      */
-    private static void firstLoop(BufferedReader reader) throws VocabularyException, IOException, SyntaxException {
+    private static void firstLoop(BufferedReader reader) throws GrammarException, IOException, SyntaxException {
         // the level variable track after the scope. when it 0 it means we in the global scope.
         int level = 0;
         String statement;
@@ -58,13 +58,13 @@ public class Parser {
             StatementTypes statementType = StatementTypes.stringMapper.get(statementParse.get(0));
             switch (statementType) {
                 case END_OF_BLOCK: {
-                    if(level==0){throw new VocabularyException("there is extra closing bracket");}
+                    if(level==0){throw new GrammarException("there is extra closing bracket");}
                     level -= 1;
                     break;
                 }
                 case METHOD_DEC: {
                     if (level > 0) {
-                        throw new VocabularyException("can't declare a nested function.");
+                        throw new GrammarException("can't declare a nested function.");
                     }
                     // add to funcTracker
                     addFunctionToTracker(statementParse.subList(1, statementParse.size()));
@@ -74,7 +74,7 @@ public class Parser {
                 case IF_CALL:
                 case WHILE_CALL: {
                     if (level == 0) {
-                        throw new VocabularyException("while and if statements are only allow inside a function.");
+                        throw new GrammarException("while and if statements are only allow inside a function.");
                     }
                     level += 1;
                     break;
@@ -98,7 +98,7 @@ public class Parser {
                 case RETURN:
                 case METHOD_CALL: {
                     if (level == 0) {
-                        throw new VocabularyException(
+                        throw new GrammarException(
                                 String.format("%s statements are only allow inside a function.", statementType));
                     }
                     break;
@@ -114,12 +114,12 @@ public class Parser {
      * add a function to FuncTracker. throw VocabularyException if function already declared.
      *
      * @param statement
-     * @throws VocabularyException
+     * @throws GrammarException
      */
-    private static void addFunctionToTracker(List<String> statement) throws VocabularyException {
+    private static void addFunctionToTracker(List<String> statement) throws GrammarException {
         String name = statement.get(1);
         if (FuncTracker.isExist(name)) {
-            throw new VocabularyException(String.format("function %s already declared.", name));
+            throw new GrammarException(String.format("function %s already declared.", name));
         }
         Function f = new Function(name);
         int ind = 3;
@@ -149,11 +149,11 @@ public class Parser {
      * iterate over all the functions and validate its block.
      *
      * @param reader
-     * @throws VocabularyException
+     * @throws GrammarException
      * @throws IOException
      * @throws SyntaxException
      */
-    private static void secondLoop(BufferedReader reader) throws VocabularyException, IOException, SyntaxException {
+    private static void secondLoop(BufferedReader reader) throws GrammarException, IOException, SyntaxException {
         String statement;
         while ((statement = reader.readLine()) != null) {
             List<String> statementParse = SyntaxValidator.getLine(statement);
@@ -181,12 +181,12 @@ public class Parser {
      * @param prevBlockVarTracker
      * @param isFuncBlock
      * @param reader
-     * @throws VocabularyException
+     * @throws GrammarException
      * @throws IOException
      * @throws SyntaxException
      */
     private static void parseBlock(VarTracker prevBlockVarTracker, boolean isFuncBlock, BufferedReader reader)
-            throws VocabularyException, IOException, SyntaxException {
+            throws GrammarException, IOException, SyntaxException {
         VarTracker varTracker = new VarTracker(prevBlockVarTracker, isFuncBlock);
         ScopeValidator scopeValidator = new ScopeValidator(varTracker);
         StatementTypes lastStatementType = null;
@@ -208,7 +208,7 @@ public class Parser {
             statementType = StatementTypes.stringMapper.get(statementParse.get(0));
         }
         if (isFuncBlock && !lastStatementType.equals(StatementTypes.RETURN)) {
-            throw new VocabularyException("function end without return statement");
+            throw new GrammarException("function end without return statement");
         }
     }
 }

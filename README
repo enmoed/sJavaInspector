@@ -1,0 +1,115 @@
+enmoed
+royabend
+
+Package oop.ex6:
+
+Package main:
+Sjavac: The main class that runs our program
+
+Package parser:
+Parser: Parser Class is an object that validates an sJava file. It contains the run method.
+
+Package trackers:
+FuncTracker: Static class that maps between a function name and function object. It contains all the
+             .sjava file functions.
+VarTracker: Class to track the program variables. It has a static mapper for global variables, and instances
+            can be used to track block variables.
+
+Package grammar:
+Function: A class to hold function properties such as it's name and arguments.
+Variable: A class to hold variable properties such as it's name and type as well as if has been initialized or
+          declared final.
+ScopeValidator: A class that validates the scope of an sJava file using the FuncTracker and an instance of
+                VarTracker.
+StatementTypes: An enum for all the statement types.
+SyntaxValidator: A class to validate the syntax of an sjava file line.
+VariablesTypes: An enum for all the different variable types. It also knows how to compare between different
+                types.
+
+Package grammar.exceptions:
+FuncNotExistException: Exception class that is used when a function does not exist
+SyntaxException: Exception class that is used when a syntax error is found in the sjava file
+VarNotExistException: Exception class that is used when a variable does not exist
+VarTypeException: Exception class that is used when a variable type contradicts the literal given
+VarTypeNotMatchException: Exception class that is used when a variable type contradicts the assignment
+GrammarException: Exception class that is used as a base exception for all other cases.
+
+Design: We decided to implement this project with a focus on maximizing encapsulation. By following this idea
+        we quickly came to the conclusion that we should divide the validation logic into two parts, syntax
+        rules and scope rules. After agreeing on a certain API that followed our vision, which revolved around
+        having one function call SyntaxValidator.getLine() that would validate the syntax and return a list
+        that includes the statement type and it's breakdown. Thereafter, the parser would take the list and
+        validate the statement against the ScopeValidator, which would then check the statement's validation
+        according to the program state.
+
+        We would like to note that the VarTracker was designed as such that we were able to use the class as
+        a static tracker for global variables and while allowing for instances to track a given scope.
+
+        Ultimately, all these design decisions allowed us to easily excel with parallel programming. In the
+        end, our API allowed us to integrate the different aspects of our project quite easily.
+
+Implementation Issues: As part of tracking and validating scopes, we found ourselves using recursive
+                       functionality in parseBlock() to parse given code segments. This allowed us to track
+                       nested scopes in a readable matter while having a runtime and space complexity
+                       tradeoff.
+
+Errors and Exceptions: We found ourselves debating between using isValid functions, that would force us to
+                       check return values for each call, and void validate functions, which would throw
+                       exceptions upon finding errors in the input file. Ultimately we decided to using
+                       validate functions, so that we could freely code knowing that errors would be caught
+                       and dealt with at the upper level of the program. We were able to make this decision
+                       as we were not throwing errors that could be caught and dealt with in our program, but
+                       rather errors that signified if the given file was valid or not.
+
+Code Modifications: An addition of new variable types to the sjava language would be relatively easy to
+                    implement in our sJavaValidator. All it would require is adding the new type to the
+                    variable types enum class, and SyntaxValidator constant.
+
+                    Adding different methods return types is also fairly easy. In the SyntaxValidator we would
+                    only need to update the if statement that checks if a statement is a method declaration,
+                    and the corresponding extraction of the method statement into a list. This ultimately is
+                    a change between void and creating options for other return types. In the ScopeValidator,
+                    we would need to update the validatorExpression such that it can be the return of a
+                    function call. We would also need to validate the return statement accordingly.
+
+                    Adding support for the standard java methods in the sjava language would make us add
+                    syntax that supports imports in the SyntaxValidator. Thereafter we could implement the
+                    extra functionality by adding all functions imported into the sjava file, into the
+                    FuncTracker, as we would with any function. This would not break the code and allow us to
+                    use our current functionality when parsing through the code.
+
+Regex: "(?=\\()|(?<=\\()|(?=,)|(?<=,)|(?=\\))|(?=;)" - We used this regex to split a valid method call. By
+                                                       following the syntax of a sjava method call, we were
+                                                       able to split the statement into different parts and
+                                                       return a list to the caller that included all these
+                                                       parts.
+       "(int|double|String|boolean|char)" - We used this regex to recognize when a given variable type was
+                                            valid. By using an or regex, we were able to check if the string
+                                            we received was one of the ones we provided, and validate
+                                            accordingly.
+
+Tests: Test 1 - checks a second assignment to an initialized final global variable
+       Test 2 - checks a second assignment that occurs in a function, to an initialized final global variable
+       Test 3 - checks declaration to the same variable name as a global final variable, and an assignment
+       that occurs in a function.
+       Test 4 - a function call with no return statement
+       Test 5 - a function call that has an argument
+       Test 6 - a function has an argument with the same name as a global variable
+       Test 7 - a function that assigns a global variable to a scope variable
+       Test 8 - a function that has a casting assignment between double and int
+       Test 9 - a function that has a casting assignment between an int and a double (bad cast)
+       Test 10 - a function that has a casting assignment between an int and a boolean (bad cast)
+       Test 11 - a function that has a casting assignment between a boolean and an int
+       Test 12 - checks the if statement variable condition
+       Test 13 - checks that an uninitialized global variable gets assigned in a function before use
+       Test 14 - checks that an uninitialized global variable gets assigned in a function before use (bad)
+       Test 15 - checks that an uninitialized global variable gets called in a function before use
+       Test 16 - checks that an uninitialized global variable gets called in a function before use (bad)
+       Test 17 - a function that only returns in an if block and not in the end (bad)
+       Test 18 - a function that only returns in an if block and not in the end
+       Test 19 - a function that only returns in an while block and not in the end
+       Test 20 - tests an inner scope variable using an outside scope fail
+
+
+
+

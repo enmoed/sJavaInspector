@@ -1,15 +1,15 @@
 package oop.ex6.trackers;
 
-import oop.ex6.vocabulary.Function;
-import oop.ex6.vocabulary.Variable;
-import oop.ex6.vocabulary.VariablesTypes;
-import oop.ex6.vocabulary.exceptions.FuncNotExistException;
+import oop.ex6.grammar.Function;
+import oop.ex6.grammar.Variable;
+import oop.ex6.grammar.exceptions.FuncNotExistException;
 
 import java.util.Hashtable;
 import java.util.SortedMap;
 
 /**
- * static class that has a mapper between func name and Function object. it contains all the .sjava file functions.
+ * Static class that maps between a function name and function object. It contains all the
+ * .sjava file functions.
  */
 public class FuncTracker {
     private static Hashtable<String, Function> funcDict = new Hashtable<>();

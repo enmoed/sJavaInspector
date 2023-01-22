@@ -1,13 +1,13 @@
-package oop.ex6.vocabulary;
+package oop.ex6.grammar;
 
 
-import oop.ex6.vocabulary.exceptions.VocabularyException;
+import oop.ex6.grammar.exceptions.GrammarException;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- * a function object for contain the function information: name and args.
+ * A class to hold function properties such as it's name and arguments
  */
 public class Function {
     private String name;
@@ -22,8 +22,8 @@ public class Function {
         return params;
     }
 
-    public void addParam(Variable param) throws VocabularyException {
-        if(params.containsKey(param.getName())){throw new VocabularyException(
+    public void addParam(Variable param) throws GrammarException {
+        if(params.containsKey(param.getName())){throw new GrammarException(
                 String.format("function %s gets 2 or more params with name %s", name,param.getName()));
         }
         params.put(param.getName(),param);

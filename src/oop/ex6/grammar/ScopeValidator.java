@@ -1,17 +1,17 @@
-package oop.ex6.vocabulary;
+package oop.ex6.grammar;
 
 import oop.ex6.trackers.FuncTracker;
 import oop.ex6.trackers.VarTracker;
-import oop.ex6.vocabulary.exceptions.VocabularyException;
+import oop.ex6.grammar.exceptions.GrammarException;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-import static oop.ex6.vocabulary.SyntaxValidator.CONST;
+import static oop.ex6.grammar.SyntaxValidator.CONST;
 
 /**
- * class for validate a scope.
- * uses the FuncTracker class and has a VarTracker instance.
+ * The class validates the scope of an sJava file using the FuncTracker and an instance of
+ * VarTracker
  */
 public class ScopeValidator {
     private VarTracker varTracker;
@@ -26,9 +26,9 @@ public class ScopeValidator {
      *
      * @param statementType
      * @param statement
-     * @throws VocabularyException
+     * @throws GrammarException
      */
-    public void validateStatement(StatementTypes statementType, String[] statement) throws VocabularyException {
+    public void validateStatement(StatementTypes statementType, String[] statement) throws GrammarException {
         switch (statementType) {
             case METHOD_CALL: {
                 validateCallFuncCallStatement(statement);
@@ -54,33 +54,33 @@ public class ScopeValidator {
      * check that function declared and the params are legal (type and amount wise).
      *
      * @param statement
-     * @throws VocabularyException
+     * @throws GrammarException
      */
-    public void validateCallFuncCallStatement(String[] statement) throws VocabularyException {
+    public void validateCallFuncCallStatement(String[] statement) throws GrammarException {
         String funcName = statement[0];
         var params = FuncTracker.getFuncArgs(funcName);
         Iterator<String> paramsNamesIterator = params.keySet().iterator();
         for (int i = 2; i < statement.length - 2; i += 2) {
             if (!paramsNamesIterator.hasNext()) {
-                throw new VocabularyException(String.format("function %s received too many arguments.", funcName));
+                throw new GrammarException(String.format("function %s received too many arguments.", funcName));
             }
             String currParamName = paramsNamesIterator.next();
             validateExpression(statement[i], params.get(currParamName).getType(), true);
         }
         if (paramsNamesIterator.hasNext()) {
-            throw new VocabularyException(
+            throw new GrammarException(
                     String.format("%s didn't gets enough params.", funcName));
         }
 
     }
 
     public void validateExpression(String expression, VariablesTypes expectedType, boolean withCasting)
-            throws VocabularyException {
+            throws GrammarException {
         if (isVariable(expression)) {
             Variable expressionVar = varTracker.getVar(expression);
             //check if init
             if (!expressionVar.isInit()) {
-                throw new VocabularyException(String.format("Try to assign %s but this variable didn't init yet",
+                throw new GrammarException(String.format("Try to assign %s but this variable didn't init yet",
                         expression));
             }
             //check if valid variable
@@ -92,12 +92,12 @@ public class ScopeValidator {
     }
 
     public static void StaticvalidateExpression(String expression, VariablesTypes expectedType, boolean withCasting)
-            throws VocabularyException {
+            throws GrammarException {
         if (isVariable(expression)) {
             Variable expressionVar = VarTracker.getGlobalVar(expression);
             //check if init
             if (!expressionVar.isInit()) {
-                throw new VocabularyException(String.format("Try to assign %s but this variable didn't init yet",
+                throw new GrammarException(String.format("Try to assign %s but this variable didn't init yet",
                         expression));
             }
             //check if valid variable
@@ -108,12 +108,12 @@ public class ScopeValidator {
         }
     }
 
-    public void validateVarAssignStatement(String[] statement) throws VocabularyException {
+    public void validateVarAssignStatement(String[] statement) throws GrammarException {
         for (int i = 0; i < statement.length; i += 4) {
             String varName = statement[i];
             Variable var = varTracker.getVar(varName);
             if (var.isFinal()) {
-                throw new VocabularyException(String.format("var %s is final and can not be assigned again", varName));
+                throw new GrammarException(String.format("var %s is final and can not be assigned again", varName));
             }
             String expression = statement[i + 2];
             validateExpression(expression, var.getType(), true);
@@ -121,12 +121,12 @@ public class ScopeValidator {
         }
     }
 
-    public static void validateGlobalVarAssignStatement(String[] statement) throws VocabularyException {
+    public static void validateGlobalVarAssignStatement(String[] statement) throws GrammarException {
         for (int i = 0; i < statement.length; i += 4) {
             String varName = statement[i];
             Variable var = VarTracker.getGlobalVar(varName);
             if (var.isFinal()) {
-                throw new VocabularyException(String.format("var %s is final and can not be assigned again", varName));
+                throw new GrammarException(String.format("var %s is final and can not be assigned again", varName));
             }
             String expression = statement[i + 2];
             StaticvalidateExpression(expression, var.getType(), true);
@@ -134,7 +134,7 @@ public class ScopeValidator {
         }
     }
 
-    public void validateVarDecStatement(String[] statement) throws VocabularyException {
+    public void validateVarDecStatement(String[] statement) throws GrammarException {
         boolean isFinal = statement[0].equals("final");
         int start = (isFinal) ? 1 : 0;
         VariablesTypes type = VariablesTypes.stringMapper.get(statement[start]);
@@ -160,7 +160,7 @@ public class ScopeValidator {
             if (isVarName) {
                 Variable var = new Variable(statement[ind], type, isFinal);
                 if (varTracker.getScopeVariableNames().contains(var.getName())) {
-                    throw new VocabularyException(
+                    throw new GrammarException(
                             String.format("Variable with name %s already declared in the current block.",
                                     var.getName()));
                 }
@@ -179,7 +179,7 @@ public class ScopeValidator {
         }
     }
 
-    public static void validateGlobalVarDecStatement(String[] statement) throws VocabularyException {
+    public static void validateGlobalVarDecStatement(String[] statement) throws GrammarException {
         boolean isFinal = statement[0].equals("final");
         int start = (isFinal) ? 1 : 0;
         VariablesTypes type = VariablesTypes.stringMapper.get(statement[start]);
@@ -205,7 +205,7 @@ public class ScopeValidator {
             if (isVarName) {
                 Variable var = new Variable(statement[ind], type, isFinal);
                 if (VarTracker.isGlobalVarExist(var.getName())) {
-                    throw new VocabularyException(
+                    throw new GrammarException(
                             String.format("Global variable with name %s already declared in the current block.",
                                     var.getName()));
                 }
@@ -224,12 +224,12 @@ public class ScopeValidator {
         }
     }
 
-    public void validateIfWhileCallStatement(String[] statement) throws VocabularyException {
+    public void validateIfWhileCallStatement(String[] statement) throws GrammarException {
         String[] condition = Arrays.copyOfRange(statement, 2, statement.length - 2);
         validateCondition(condition);
     }
 
-    public void validateCondition(String[] condition) throws VocabularyException {
+    public void validateCondition(String[] condition) throws GrammarException {
         for (int i = 0; i < condition.length; i += 2) {
             String term = condition[i];
             if (isVariable(term)) {
@@ -237,7 +237,7 @@ public class ScopeValidator {
                 Variable termVar = varTracker.getVar(term);
                 //has assign
                 if (!termVar.isInit()) {
-                    throw new VocabularyException(String.format("Variable %s didnt assign", term));
+                    throw new GrammarException(String.format("Variable %s didnt assign", term));
                 }
                 //check if valid variable
                 VariablesTypes.validateVarType(VariablesTypes.BOOLEAN, termVar.getType(), true);

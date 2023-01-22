@@ -1,15 +1,15 @@
 package oop.ex6.trackers;
 
-import oop.ex6.vocabulary.Variable;
-import oop.ex6.vocabulary.exceptions.VarNotExistException;
+import oop.ex6.grammar.Variable;
+import oop.ex6.grammar.exceptions.VarNotExistException;
 
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
 /**
- * class for track after the block variables. it has static mapper for global variables, and an instance of that class
- * is for a block validation.
+ * Class to track the program variables. It has a static mapper for global variables, and instances can be
+ * used to track block variables.
  */
 public class VarTracker {
     private static Hashtable<String, Variable> globalVarDict = new Hashtable<>();

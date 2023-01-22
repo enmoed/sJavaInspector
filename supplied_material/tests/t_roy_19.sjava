@@ -5,7 +5,7 @@ int a;
 
 void f(int c){
 int b=5;
-if(b){
+while(b){
 return;
 }
 return;

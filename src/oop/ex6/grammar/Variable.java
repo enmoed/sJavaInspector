@@ -1,9 +1,8 @@
-package oop.ex6.vocabulary;
-
-import oop.ex6.vocabulary.exceptions.VarTypeException;
+package oop.ex6.grammar;
 
 /**
- * variable object for contain all the variable information.
+ * A class to hold variable properties such as it's name and type as well as if has been initialized or
+ * declared final
  */
 public class Variable {
     private VariablesTypes type;

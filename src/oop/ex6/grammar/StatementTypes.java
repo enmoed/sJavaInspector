@@ -1,4 +1,4 @@
-package oop.ex6.vocabulary;
+package oop.ex6.grammar;
 
 import java.util.Hashtable;
 

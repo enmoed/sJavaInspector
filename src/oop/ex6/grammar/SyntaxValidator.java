@@ -1,10 +1,13 @@
-package oop.ex6.vocabulary;
+package oop.ex6.grammar;
 
-import oop.ex6.vocabulary.exceptions.SyntaxException;
+import oop.ex6.grammar.exceptions.SyntaxException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class to validate the syntax of an sjava file line.
+ */
 public class SyntaxValidator {
     private static final String VAR_NAME = "\\s*(_\\w|[a-zA-Z])\\w*\\s*";
     private static final String METHOD_NAME = "\\s*[a-zA-Z]\\w*\\s*";
@@ -33,6 +36,13 @@ public class SyntaxValidator {
     private static final String RETURN = "\\s*return\\s*";
     private static final String COMMENT = "//.*";
     private static final String FINAL = "\\s*(final)\\s*";
+
+    /**
+     * The function parses a sjava file line and checks if its syntax is valid
+     * @param line the sjava line to syntactically validate
+     * @return A list object with the parsed statement
+     * @throws SyntaxException Throws if the syntax is invalid
+     */
     public static List<String> getLine(String line) throws SyntaxException {
         if (line.matches(IF + "\\(" + CONDITION + "\\)" + OPEN_BRACKETS)) {
             return extractIfStatement(line);
@@ -107,6 +117,9 @@ public class SyntaxValidator {
         throw new SyntaxException(line);
     }
 
+    /**
+     * @return a list of the extracted comment
+     */
     private static List<String> extractComment() {
         List<String> list = new ArrayList<>();
         list.add(StatementTypes.COMMENT.toString());
@@ -114,6 +127,9 @@ public class SyntaxValidator {
         return list;
     }
 
+    /**
+     * @return a list of the extracted block end
+     */
     private static List<String> extractBlockEnd() {
         List<String> list = new ArrayList<>();
         list.add(StatementTypes.END_OF_BLOCK.toString());
@@ -121,6 +137,9 @@ public class SyntaxValidator {
         return list;
     }
 
+    /**
+     * @return a list of the extracted assignment
+     */
     private static List<String> extractAssignment(String line) {
         List<String> list = new ArrayList<>();
         String[] parts = line.split("(?==)|(?<==)|(?=,)|(?<=,)|(?=;)");
@@ -128,6 +147,9 @@ public class SyntaxValidator {
         return getParsedLine(parts, list);
     }
 
+    /**
+     * @return a list of the extracted declaration
+     */
     private static List<String> extractDeclaration(String line) {
         List<String> list = new ArrayList<>();
         String[] parts = line.split("(?<=final)|(?<=" + TYPE + ")|(?==)|(?<==)|(?=,)|(?<=,)|(?=;)");
@@ -135,6 +157,9 @@ public class SyntaxValidator {
         return getParsedLine(parts, list);
     }
 
+    /**
+     * @return a list of the extracted method call
+     */
     private static List<String> extractMethodCall(String line) {
         List<String> list = new ArrayList<>();
         String[] parts = line.split("(?=\\()|(?<=\\()|(?=,)|(?<=,)|(?=\\))|(?=;)");
@@ -142,6 +167,9 @@ public class SyntaxValidator {
         return getParsedLine(parts, list);
     }
 
+    /**
+     * @return a list of the extracted method declaration
+     */
     private static List<String> extractMethodDeclaration(String line) {
         List<String> list = new ArrayList<>();
         String[] parts = line.split("(?<=void)|(?=\\()|(?<=\\()|(?<=final)|(?<=" + TYPE +
@@ -150,6 +178,9 @@ public class SyntaxValidator {
         return getParsedLine(parts, list);
     }
 
+    /**
+     * @return a list of the extracted if statement
+     */
     private static List<String> extractIfStatement(String line) {
         List<String> list = new ArrayList<>();
         String[] parts = line.split("(?<=if)|(?<=\\()|(?=(&&))|(?=(\\|\\|))|(?<=(&&))|" +
@@ -158,6 +189,9 @@ public class SyntaxValidator {
         return getParsedLine(parts, list);
     }
 
+    /**
+     * @return a list of the extracted while statement
+     */
     private static List<String> extractWhileStatement(String line) {
         List<String> list = new ArrayList<>();
         String[] parts = line.split("(?<=while)|(?<=\\()|(?=(&&))|(?=(\\|\\|))|(?<=(&&))|" +
@@ -166,6 +200,12 @@ public class SyntaxValidator {
         return getParsedLine(parts, list);
     }
 
+    /**
+     * Takes a String array and trims its members and appends them to a given list
+     * @param parts
+     * @param list
+     * @return the updated list
+     */
     private static List<String> getParsedLine(String[] parts, List<String> list) {
         for (String part : parts) {
             part = part.trim();
@@ -176,6 +216,9 @@ public class SyntaxValidator {
         return list;
     }
 
+    /**
+     * @return a list of the extracted return statment
+     */
     private static List<String> returnStatement() {
         List<String> list = new ArrayList<>();
         list.add(StatementTypes.RETURN.toString());

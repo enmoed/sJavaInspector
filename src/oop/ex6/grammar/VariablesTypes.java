@@ -1,7 +1,7 @@
-package oop.ex6.vocabulary;
+package oop.ex6.grammar;
 
-import oop.ex6.vocabulary.exceptions.VarTypeException;
-import oop.ex6.vocabulary.exceptions.VarTypeNotMatchException;
+import oop.ex6.grammar.exceptions.VarTypeException;
+import oop.ex6.grammar.exceptions.VarTypeNotMatchException;
 
 import java.util.Hashtable;
 
