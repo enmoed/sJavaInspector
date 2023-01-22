@@ -22,7 +22,8 @@ public class SyntaxValidator {
     private static final String IF = "\\s*if\\s*";
     private static final String WHILE = "\\s*while\\s*";
     private static final String TYPE = "(int|double|String|boolean|char)";
-    private static final String PARAM_LIST = "\\s*(" + TYPE + VAR_NAME + "(,\\s*" + TYPE + VAR_NAME + ")*)?";
+    private static final String PARAM_LIST = "\\s*(\\s*(final)?" + TYPE + VAR_NAME + "(,\\s*(final)?" + TYPE +
+            VAR_NAME + ")*)?";
     private static final String OP = "(\\|\\||&&)";
     private static final String TERM = "(" + DOUBLE + "|" + VAR_NAME + ")";
     private static final String CONDITION = TERM + "(" + OP + TERM + ")*";
@@ -31,8 +32,7 @@ public class SyntaxValidator {
     private static final String OPEN_BRACKETS = "\\s*\\{\\s*";
     private static final String RETURN = "\\s*return\\s*";
     private static final String COMMENT = "//.*";
-    private static final String FINAL = "\\s*(final)?\\s*";
-
+    private static final String FINAL = "\\s*(final)\\s*";
     public static List<String> getLine(String line) throws SyntaxException {
         if (line.matches(IF + "\\(" + CONDITION + "\\)" + OPEN_BRACKETS)) {
             return extractIfStatement(line);
@@ -49,20 +49,21 @@ public class SyntaxValidator {
         if (line.matches(VAR_NAME + "\\(" + VAR_LIST + "\\)\\s*" + END_LINE)) {
             return extractMethodCall(line);
         }
-        if (line.matches(FINAL + "int(" + VAR_NAME + "=(" + INT + "|" + VAR_NAME + "))(," +
-                VAR_NAME + "=" + "(" + INT + "|" + VAR_NAME + ")" + "?)*" + END_LINE)) {
+        if (line.matches(FINAL + "int(" + VAR_NAME + "=(" + INT + "|" + VAR_NAME +
+                "))(," + VAR_NAME + "=" + "(" + INT + "|" + VAR_NAME + ")" + "?)*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "double(" + VAR_NAME + "=(" + DOUBLE + "|" + VAR_NAME + "))(," +
-                VAR_NAME + "=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "double(" + VAR_NAME + "=(" + DOUBLE + "|" + VAR_NAME +
+                "))(," + VAR_NAME + "=" + "(" + DOUBLE + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "String(" + VAR_NAME + "=(" + LITERAL + "|" + VAR_NAME + "))(," +
-                VAR_NAME + "=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "String(" + VAR_NAME + "=(" + LITERAL + "|" + VAR_NAME +
+                "))(," + VAR_NAME + "=" + "(" + LITERAL + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
             return extractDeclaration(line);
         }
-        if (line.matches(FINAL + "boolean(" + VAR_NAME + "=(" + BOOL_OR_DOUBLE + "|" + VAR_NAME +
-                "))(," + VAR_NAME + "=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")*" + END_LINE)) {
+        if (line.matches(FINAL + "boolean(" + VAR_NAME + "=(" + BOOL_OR_DOUBLE + "|" +
+                VAR_NAME + "))(," + VAR_NAME + "=" + "(" + BOOL_OR_DOUBLE + "|" + VAR_NAME + ")" + ")*" +
+                END_LINE)) {
             return extractDeclaration(line);
         }
         if (line.matches(FINAL + "char(" + VAR_NAME + "=(" + CHAR + "|" + VAR_NAME + "))(," +
@@ -143,7 +144,7 @@ public class SyntaxValidator {
 
     private static List<String> extractMethodDeclaration(String line) {
         List<String> list = new ArrayList<>();
-        String[] parts = line.split("(?<=void)|(?=\\()|(?<=\\()|(?<=" + TYPE +
+        String[] parts = line.split("(?<=void)|(?=\\()|(?<=\\()|(?<=final)|(?<=" + TYPE +
                 ")|(?=,)|(?<=,)|(?=\\))|(?=\\{)");
         list.add(StatementTypes.METHOD_DEC.toString());
         return getParsedLine(parts, list);
