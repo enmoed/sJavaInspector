@@ -46,7 +46,9 @@ public enum VariablesTypes {
                     break;
                 }
                 case STRING: {
-                    break; //always good
+                    if(!(value.charAt(0)=='"'&&value.charAt(value.length()-1)=='"')){
+                        throw new VarTypeException(VariablesTypes.STRING,value);
+                    }
                 }
             }
         } catch (VarTypeException e) {

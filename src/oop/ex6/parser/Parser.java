@@ -138,6 +138,7 @@ public class Parser {
                     true) :
                     new Variable(statement.get(ind + 1),
                             VariablesTypes.stringMapper.get(statement.get(ind)));
+            param.hasAssign(); // define as init.
             f.addParam(param);
             ind += 2;
         }

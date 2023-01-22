@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SyntaxValidator {
-    private static final String VAR_NAME = "\\s*[_a-zA-z]\\w*\\s*";
-    private static final String METHOD_NAME = "\\s*[a-zA-z]\\w*\\s*";
+    private static final String VAR_NAME = "\\s*(_\\w|[a-zA-Z])\\w*\\s*";
+    private static final String METHOD_NAME = "\\s*[a-zA-Z]\\w*\\s*";
     private static final String INT = "\\s*[-+]?\\d+\\s*";
     private static final String DOUBLE = "\\s*[-+]?(\\d+(\\.\\d*)?|(\\.\\d+))\\s*";
     private static final String STRING = "\\s*.*\\s*";

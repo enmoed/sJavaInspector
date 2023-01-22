@@ -1,6 +1,8 @@
 package oop.ex6.vocabulary;
 
 
+import oop.ex6.vocabulary.exceptions.VocabularyException;
+
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -20,7 +22,10 @@ public class Function {
         return params;
     }
 
-    public void addParam(Variable param){
+    public void addParam(Variable param) throws VocabularyException {
+        if(params.containsKey(param.getName())){throw new VocabularyException(
+                String.format("function %s gets 2 or more params with name %s", name,param.getName()));
+        }
         params.put(param.getName(),param);
     }
 

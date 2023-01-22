@@ -23,6 +23,7 @@ public class ScopeValidator {
     /**
      * the main method of the class - get a statementType and a parsed statement and
      * if there is a problem it throws a VocabularyException.
+     *
      * @param statementType
      * @param statement
      * @throws VocabularyException
@@ -51,6 +52,7 @@ public class ScopeValidator {
 
     /**
      * check that function declared and the params are legal (type wise).
+     *
      * @param statement
      * @throws VocabularyException
      */
@@ -65,11 +67,14 @@ public class ScopeValidator {
             String currParamName = paramsNamesIterator.next();
             validateExpression(statement[i], params.get(currParamName).getType(), true);
         }
+        if (paramsNamesIterator.hasNext()) {
+            throw new VocabularyException(
+                    String.format("%s didn't gets enough params.", funcName));
+        }
 
     }
 
     /**
-     *
      * @param expression
      * @param expectedType
      * @param withCasting
