@@ -1,10 +1,7 @@
 package oop.ex6.trackers;
 
 import oop.ex6.vocabulary.Variable;
-import oop.ex6.vocabulary.VariablesTypes;
 import oop.ex6.vocabulary.exceptions.VarNotExistException;
-import oop.ex6.vocabulary.exceptions.VarTypeNotMatchException;
-import oop.ex6.vocabulary.exceptions.VocabularyException;
 
 import java.util.HashSet;
 import java.util.Hashtable;
