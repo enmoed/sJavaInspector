@@ -15,24 +15,20 @@ import java.util.List;
 public class Parser {
 
     public static void run(String filePath) {
+        int code;
         try (BufferedReader readerFirstLoop = new BufferedReader(new FileReader(filePath));
              BufferedReader readerSecondLoop = new BufferedReader(new FileReader(filePath))) {
             firstLoop(readerFirstLoop);
             secondLoop(readerSecondLoop);
-            System.exit(0);
-        } catch (FileNotFoundException e) {
-            System.out.println(String.format("%s file not found", filePath));
-            System.exit(2);
+            code = 0;
         } catch (IOException e) {
-            System.out.println(String.format("program exit with IOException: %s", e.getMessage()));
-            System.exit(2);
-        } catch (VocabularyException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
-        } catch (SyntaxException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
+            System.err.println(e.getMessage());
+            code = 2;
+        } catch (VocabularyException | SyntaxException e) {
+            System.err.println(e.getMessage());
+            code = 1;
         }
+        System.out.println(code);
     }
 
     private static void firstLoop(BufferedReader reader) throws VocabularyException, IOException, SyntaxException {
@@ -57,11 +53,13 @@ public class Parser {
             }
             if (statementType.equals(StatementTypes.VAR_DEC) && level == 0) {
                 // validate and add to varTracker to global vars
-                ScopeValidator.validateGlobalVarDecStatement(statementParse.subList(1, statementParse.size()).toArray(new String[0]));
+                ScopeValidator.validateGlobalVarDecStatement(statementParse.subList(1, statementParse.size()).
+                        toArray(new String[0]));
             }
             if (statementType.equals(StatementTypes.VAR_ASSIGN) && level == 0) {
                 // validate add update varTracker global vars that init.
-                ScopeValidator.validateGlobalVarAssignStatement(statementParse.subList(1, statementParse.size()).toArray(new String[0]));
+                ScopeValidator.validateGlobalVarAssignStatement(statementParse.subList(1, statementParse.size()).
+                        toArray(new String[0]));
             }
         }
         VarTracker.setGlobalVarWhichNotAssignOutsideFunctions();
@@ -99,7 +97,7 @@ public class Parser {
                 }
                 parseBlock(varTracker, true, reader);
             }
-            // set all the global vars which didnt init as not init again
+            // set all the global vars which didn't init as not init again
             // (to check in the next func that they will init too)
             VarTracker.resetInitOfGlobalVars();
         }
