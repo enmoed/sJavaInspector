@@ -58,6 +58,7 @@ public class Parser {
             StatementTypes statementType = StatementTypes.stringMapper.get(statementParse.get(0));
             switch (statementType) {
                 case END_OF_BLOCK: {
+                    if(level==0){throw new VocabularyException("there is extra closing bracket");}
                     level -= 1;
                     break;
                 }
