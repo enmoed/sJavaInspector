@@ -51,7 +51,7 @@ public class ScopeValidator {
     }
 
     /**
-     * check that function declared and the params are legal (type wise).
+     * check that function declared and the params are legal (type and amount wise).
      *
      * @param statement
      * @throws VocabularyException
@@ -74,12 +74,6 @@ public class ScopeValidator {
 
     }
 
-    /**
-     * @param expression
-     * @param expectedType
-     * @param withCasting
-     * @throws VocabularyException
-     */
     public void validateExpression(String expression, VariablesTypes expectedType, boolean withCasting)
             throws VocabularyException {
         if (isVariable(expression)) {
