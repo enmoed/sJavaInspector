@@ -9,6 +9,10 @@ import java.util.Iterator;
 
 import static oop.ex6.vocabulary.SyntaxValidator.CONST;
 
+/**
+ * class for validate a scope.
+ * uses the FuncTracker class and has a VarTracker instance.
+ */
 public class ScopeValidator {
     private VarTracker varTracker;
 
@@ -16,6 +20,13 @@ public class ScopeValidator {
         this.varTracker = varTracker;
     }
 
+    /**
+     * the main method of the class - get a statementType and a parsed statement and
+     * if there is a problem it throws a VocabularyException.
+     * @param statementType
+     * @param statement
+     * @throws VocabularyException
+     */
     public void validateStatement(StatementTypes statementType, String[] statement) throws VocabularyException {
         switch (statementType) {
             case METHOD_CALL: {
@@ -38,6 +49,11 @@ public class ScopeValidator {
         }
     }
 
+    /**
+     * check that function declared and the params are legal (type wise).
+     * @param statement
+     * @throws VocabularyException
+     */
     public void validateCallFuncCallStatement(String[] statement) throws VocabularyException {
         String funcName = statement[0];
         var params = FuncTracker.getFuncArgs(funcName);
@@ -52,6 +68,13 @@ public class ScopeValidator {
 
     }
 
+    /**
+     *
+     * @param expression
+     * @param expectedType
+     * @param withCasting
+     * @throws VocabularyException
+     */
     public void validateExpression(String expression, VariablesTypes expectedType, boolean withCasting)
             throws VocabularyException {
         if (isVariable(expression)) {
@@ -203,7 +226,7 @@ public class ScopeValidator {
     }
 
     public void validateIfWhileCallStatement(String[] statement) throws VocabularyException {
-        String[] condition = Arrays.copyOfRange(statement, 3, statement.length - 2);
+        String[] condition = Arrays.copyOfRange(statement, 2, statement.length - 2);
         validateCondition(condition);
     }
 

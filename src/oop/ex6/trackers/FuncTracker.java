@@ -7,6 +7,9 @@ import oop.ex6.vocabulary.exceptions.FuncNotExistException;
 import java.util.Hashtable;
 import java.util.SortedMap;
 
+/**
+ * static class that has a mapper between func name and Function object. it contains all the .sjava file functions.
+ */
 public class FuncTracker {
     private static Hashtable<String, Function> funcDict = new Hashtable<>();
 
@@ -16,6 +19,12 @@ public class FuncTracker {
         }
     }
 
+    /**
+     * return the func params if exists. else throw an error.
+     * @param funcName
+     * @return
+     * @throws FuncNotExistException
+     */
     public static SortedMap<String, VariablesTypes> getFuncArgs(String funcName) throws FuncNotExistException {
         validateFuncExist(funcName);
         return funcDict.get(funcName).getParams();
@@ -27,6 +36,10 @@ public class FuncTracker {
     public static boolean isExist(String funcName) {
         return funcDict.containsKey(funcName);
     }
+
+    /**
+     * a function for tests - when parse multiple files, need to reset the funcDict because it is static one.
+     */
     public static void reset(){ //for tests
         funcDict = new Hashtable<>();
     }

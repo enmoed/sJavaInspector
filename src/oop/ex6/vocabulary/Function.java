@@ -4,6 +4,9 @@ package oop.ex6.vocabulary;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+/**
+ * a function object for contain the function information: name and args.
+ */
 public class Function {
     private String name;
     private SortedMap<String, VariablesTypes> params; //should be sorted for args order

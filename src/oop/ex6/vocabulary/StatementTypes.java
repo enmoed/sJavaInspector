@@ -2,6 +2,9 @@ package oop.ex6.vocabulary;
 
 import java.util.Hashtable;
 
+/**
+ * all the statement types.
+ */
 public enum StatementTypes {
     VAR_DEC,
     METHOD_CALL,

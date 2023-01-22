@@ -7,19 +7,35 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
+/**
+ * class for track after the block variables. it has static mapper for global variables, and an instance of that class
+ * is for a block validation.
+ */
 public class VarTracker {
     private static Hashtable<String, Variable> globalVarDict = new Hashtable<>();
     private Hashtable<String, Variable> scopeVarDict;
-    // because cant be 2 scope var with same name, and the scopeVarDict include prev scope
+
+    // because cant be 2 scope var with same name, and the scopeVarDict include prev scope.
     private Set<String> scopeVariableNames;
 
     private static Set<String> globalVarWhichNotAssignOutsideFunctions = new HashSet<>();
 
+    /**
+     * default constructor. init empty scopeVarDict and scopeVariableNames.
+     */
     public VarTracker() {
         scopeVarDict = new Hashtable<>();
         scopeVariableNames = new HashSet<>();
     }
 
+    /**
+     * constructor for a block Tracker. receive the previous block VarTracker for know its variables as well.
+     * if its a function block, the args include in the prevScope scopeVariableNames,
+     * so it takes them to the scopeVariableNames.
+     *
+     * @param prevScope
+     * @param isFuncBlock
+     */
     public VarTracker(VarTracker prevScope, boolean isFuncBlock) {
         scopeVarDict = new Hashtable<>();
         scopeVarDict.putAll(prevScope.scopeVarDict);
