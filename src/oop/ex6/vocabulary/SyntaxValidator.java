@@ -10,7 +10,7 @@ public class SyntaxValidator {
     private static final String METHOD_NAME = "\\s*[a-zA-z]\\w*\\s*";
     private static final String INT = "\\s*[-+]?\\d+\\s*";
     private static final String DOUBLE = "\\s*[-+]?(\\d+(\\.\\d*)?|(\\.\\d+))\\s*";
-    private static final String STRING = "\\s*.+\\s*";
+    private static final String STRING = "\\s*.*\\s*";
     private static final String LITERAL = "\\s*\"" + STRING + "\"\\s*";
     private static final String CHAR = "\\s*'\\s*.\\s*'\\s*";
     private static final String BOOL = "\\s*(false|true)\\s*";
