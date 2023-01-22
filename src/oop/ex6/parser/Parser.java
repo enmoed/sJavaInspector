@@ -23,6 +23,8 @@ public class Parser {
      */
     public static void run(String filePath) {
         int code;
+        VarTracker.reset();
+        FuncTracker.reset();
         // open 2 BufferedReader for the first and second loops.
         try (BufferedReader readerFirstLoop = new BufferedReader(new FileReader(filePath));
              BufferedReader readerSecondLoop = new BufferedReader(new FileReader(filePath))) {
